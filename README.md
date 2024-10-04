@@ -40,6 +40,7 @@
   ```
   sudo nodetool status
   ```
+  
 
 # Install the Python packages
 
@@ -59,10 +60,17 @@
 - Install requirements:
   
   ```
-  pip install -r requirements.txt
+  pip install -r cassandra_poc/requirements.txt
   ```
 
-# Steps needed to configure new project
+- Start django server:
+
+  ```
+  cd cassandra_poc &&\
+  ./manage.py runserver
+  ```
+
+# Steps needed to create a new Django project
 
 - Start a new Django project
 
