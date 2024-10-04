@@ -42,6 +42,60 @@
   
   `pip install -r requirements.txt`
 
+# Steps needed to configure new project
 
+- Start a new Django project
+
+  `django-admin startproject myproject`
+  `cd myproject`
+
+- Create a new app
+
+  `python manage.py startapp myapp`
+
+- Modify `myproject/settings.py` to configure Cassandra as the database:
+
+```py
+# settings.py
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django_cassandra_engine',
+        'NAME': 'mykeyspace',  # Replace with your keyspace
+        'HOST': '127.0.0.1',
+        'OPTIONS': {
+            'replication': {
+                'strategy_class': 'SimpleStrategy',
+                'replication_factor': 1
+            },
+            'connection': {
+                'consistency': 1,
+                'retry_connect': True,
+                'lazy_connect': True
+            }
+        }
+    }
+}
+
+# Add 'myapp' to INSTALLED_APPS
+INSTALLED_APPS = [
+    # Other installed apps
+    'django_cassandra_engine',
+    'myapp',
+]
+```
+
+- Create the Cassandra Keyspace:
+
+  `sudo cqlsh`
+```py
+  CREATE KEYSPACE mykeyspace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+```
+
+- Performing Migrations:
+  
+  Since Cassandra doesn’t have Django migrations, you don’t need to run the usual migration commands.Run the following command instead:
+
+  `python manage.py sync_cassandra`
 
   
