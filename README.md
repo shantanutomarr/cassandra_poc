@@ -5,97 +5,125 @@
 # Install the Debian packages
 - Add the repository for version cassandra {41_version} (41x):
   
-  `echo "deb [signed-by=/etc/apt/keyrings/apache-cassandra.asc] https://debian.cassandra.apache.org 41x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list`
+  ```
+  echo "deb [signed-by=/etc/apt/keyrings/apache-cassandra.asc] https://debian.cassandra.apache.org 41x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+  ```
 
 - Add the Apache Cassandra repository keys to the list of trusted keys on the server:
   
-  `curl -o /etc/apt/keyrings/apache-cassandra.asc https://downloads.apache.org/cassandra/KEYS`
+  ```
+  curl -o /etc/apt/keyrings/apache-cassandra.asc https://downloads.apache.org/cassandra/KEYS
+  ```
 
-  `sudo apt-get update`
+  ```
+  sudo apt-get update
+  ```
 
 - Install Cassandra with APT:
 
-  `sudo apt-get install cassandra`
+  ```
+  sudo apt-get install cassandra
+  ```
 
 - Start Cassandra service:
   
-  `sudo systemctl start cassandra`
+  ```
+  sudo systemctl start cassandra
+  ```
 
-  `sudo systemctl enable cassandra`
+  ```
+  sudo systemctl enable cassandra
+  ```
 
 - Check the status of Cassandra:
 
-  `sudo nodetool status`
+  ```
+  sudo nodetool status
+  ```
 
 # Install the Python packages
 
 - Install Python and pip
 
-  `sudo apt install python3 python3-pip python3-venv -y`
+  ```
+  sudo apt install python3 python3-pip python3-venv -y
+  ```
 
 - Create Virtual Environemnt:
 
-  `python3 -m venv path/to/env/folder`
-  `source path/to/env/folder/bin/activate`
+  ```
+  python3 -m venv path/to/env/folder
+  source path/to/env/folder/bin/activate
+  ```
   
 - Install requirements:
   
-  `pip install -r requirements.txt`
+  ```
+  pip install -r requirements.txt
+  ```
 
 # Steps needed to configure new project
 
 - Start a new Django project
 
-  `django-admin startproject myproject`
-  `cd myproject`
+  ```
+  django-admin startproject myproject
+  cd myproject
+  ```
 
 - Create a new app
 
-  `python manage.py startapp myapp`
+  ```
+  python manage.py startapp myapp
+  ```
 
 - Modify `myproject/settings.py` to configure Cassandra as the database:
 
 ```py
-# settings.py
+  # settings.py
+  
+  DATABASES = {
+      'default': {
+          'ENGINE': 'django_cassandra_engine',
+          'NAME': 'mykeyspace',  # Replace with your keyspace
+          'HOST': '127.0.0.1',
+          'OPTIONS': {
+              'replication': {
+                  'strategy_class': 'SimpleStrategy',
+                  'replication_factor': 1
+              },
+              'connection': {
+                  'consistency': 1,
+                  'retry_connect': True,
+                  'lazy_connect': True
+              }
+          }
+      }
+  }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django_cassandra_engine',
-        'NAME': 'mykeyspace',  # Replace with your keyspace
-        'HOST': '127.0.0.1',
-        'OPTIONS': {
-            'replication': {
-                'strategy_class': 'SimpleStrategy',
-                'replication_factor': 1
-            },
-            'connection': {
-                'consistency': 1,
-                'retry_connect': True,
-                'lazy_connect': True
-            }
-        }
-    }
-}
-
-# Add 'myapp' to INSTALLED_APPS
-INSTALLED_APPS = [
-    # Other installed apps
-    'django_cassandra_engine',
-    'myapp',
-]
+  # Add 'myapp' to INSTALLED_APPS
+  INSTALLED_APPS = [
+      # Other installed apps
+      'django_cassandra_engine',
+      'myapp',
+  ]
 ```
 
 - Create the Cassandra Keyspace:
 
-  `sudo cqlsh`
-```py
+  ```
+  sudo cqlsh
+  ```
+  ```
   CREATE KEYSPACE mykeyspace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
-```
+  ```
 
 - Performing Migrations:
   
   Since Cassandra doesn’t have Django migrations, you don’t need to run the usual migration commands.Run the following command instead:
 
-  `python manage.py sync_cassandra`
+  ```
+  python manage.py sync_cassandra
+  ```
 
   
