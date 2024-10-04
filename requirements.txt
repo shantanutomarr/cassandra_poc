@@ -3,6 +3,8 @@ cassandra-driver==3.29.2
 click==8.1.7
 Django==5.1.1
 django-cassandra-engine==1.9.0
+django-rest-framework==0.1.0
+djangorestframework==3.15.2
 geomet==0.2.1.post1
 PyYAML==6.0.2
 scylla-driver==3.26.9
