@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book</title>
+    <style>
+        form {
+            width: 300px;
+            margin: 20px auto;
+        }
+        label, input, select {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        {% if book %}
+          <button type="submit">Update Book</button>
+        {% else %}
+          <button type="submit">Create Book</button>
+        {% endif %}
+    </form>
+
+    <a href="{% url 'books:list' %}">Back to Book List</a>
+</body>
+</html>
