@@ -9,6 +9,7 @@ class BooksListView(ListView):
     model = Book
     template_name = 'book_list.html'
     context_object_name = "books"
+    pass
 
 
 class CreateBookView(CreateView):
